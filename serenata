@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serenata Virtual</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --gold: #fef3c7;
+      --soft-gold: #fde68a;
+      --pink: #fda4af;
+      --rose: #fb7185;
+      --bg1: #020617;
+      --bg2: #0f172a;
+      --bg3: #1e1b4b;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, serif;
+      background: radial-gradient(circle at top, #172554 0%, #020617 42%, #000 100%);
+      color: #fff7ed;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .stars, .stars::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.9), transparent),
+        radial-gradient(1.5px 1.5px at 140px 80px, rgba(255,255,255,.85), transparent),
+        radial-gradient(2px 2px at 260px 160px, rgba(255,255,255,.65), transparent),
+        radial-gradient(1.5px 1.5px at 420px 120px, rgba(255,255,255,.8), transparent),
+        radial-gradient(2px 2px at 560px 240px, rgba(255,255,255,.7), transparent),
+        radial-gradient(1.5px 1.5px at 760px 70px, rgba(255,255,255,.9), transparent);
+      background-size: 800px 300px;
+      opacity: .42;
+      animation: twinkle 8s linear infinite;
+    }
+
+    .stars::after {
+      opacity: .22;
+      animation-duration: 12s;
+    }
+
+    @keyframes twinkle {
+      from { transform: translateY(0); }
+      to { transform: translateY(-44px); }
+    }
+
+    .floating-hearts span {
+      position: fixed;
+      bottom: -30px;
+      font-size: 1.25rem;
+      animation: rise 9s linear infinite;
+      opacity: .72;
+      pointer-events: none;
+    }
+
+    .floating-hearts span:nth-child(1) { left: 7%; animation-delay: 0s; }
+    .floating-hearts span:nth-child(2) { left: 20%; animation-delay: 2s; }
+    .floating-hearts span:nth-child(3) { left: 38%; animation-delay: 4s; }
+    .floating-hearts span:nth-child(4) { left: 55%; animation-delay: 1s; }
+    .floating-hearts span:nth-child(5) { left: 74%; animation-delay: 5s; }
+    .floating-hearts span:nth-child(6) { left: 88%; animation-delay: 3s; }
+
+    @keyframes rise {
+      0% { transform: translateY(0) scale(.7); opacity: 0; }
+      16% { opacity: .82; }
+      100% { transform: translateY(-120vh) scale(1.25); opacity: 0; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 28px 18px 70px;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .card {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 30px;
+      padding: 30px 22px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.45);
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -30% auto auto 50%;
+      width: 360px;
+      height: 360px;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, rgba(250,204,21,.18) 0%, rgba(244,114,182,.12) 35%, transparent 72%);
+      filter: blur(18px);
+      pointer-events: none;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: clamp(2.2rem, 6vw, 4.8rem);
+      line-height: 1.03;
+      color: var(--gold);
+      text-shadow: 0 5px 18px rgba(0,0,0,.45);
+    }
+
+    .subtitle {
+      position: relative;
+      z-index: 1;
+      margin: 16px auto 0;
+      max-width: 720px;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--soft-gold);
+      line-height: 1.75;
+    }
+
+    .signature {
+      margin-top: 12px;
+      font-size: 1.06rem;
+      color: #fff1c7;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(255,255,255,.12);
+    }
+
+    .btns {
+      margin-top: 28px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .22s ease, box-shadow .22s ease, background .22s ease, opacity .22s ease;
+    }
+
+    button:hover { transform: translateY(-2px) scale(1.03); }
+
+    .primary {
+      background: linear-gradient(135deg, #f59e0b, #fb7185);
+      color: white;
+      box-shadow: 0 8px 26px rgba(251, 113, 133, .34);
+    }
+
+    .secondary {
+      background: rgba(255,255,255,.12);
+      color: #fff7ed;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+
+    .mini {
+      font-size: .97rem;
+      color: #e2e8f0;
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.65;
+    }
+
+    section {
+      margin-top: 34px;
+      display: none;
+      animation: fadeUp .75s ease;
+    }
+
+    section.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+      color: var(--gold);
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+    }
+
+    .main-title {
+      font-family: "Times New Roman", serif;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 18px rgba(250,204,21,.18), 0 4px 16px rgba(0,0,0,.36);
+      animation: glowTitle 3.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowTitle {
+      from { opacity: .9; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.015); }
+    }
+
+    .scene-intro {
+      text-align: center;
+      color: #f8e8b0;
+      font-size: 1.06rem;
+      min-height: 30px;
+      margin-bottom: 14px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .stage {
+      position: relative;
+      height: 460px;
+      margin: 24px auto 18px;
+      max-width: 900px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, rgba(0,0,0,.98) 0%, rgba(4,10,24,1) 50%, rgba(16,16,16,1) 100%);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 -40px 95px rgba(0,0,0,.95), 0 22px 65px rgba(0,0,0,.5);
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 120px;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 38%, rgba(0,0,0,.62) 100%);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .curtain {
+      position: absolute;
+      top: 0;
+      width: 18%;
+      height: 100%;
+      background: linear-gradient(90deg, #4a0909, #7f1d1d, #4a0909);
+      opacity: .92;
+      z-index: 7;
+      transition: transform 1.4s ease;
+      box-shadow: inset 0 0 26px rgba(0,0,0,.28);
+    }
+
+    .curtain.left { left: 0; border-right: 1px solid rgba(255,255,255,.08); }
+    .curtain.right { right: 0; border-left: 1px solid rgba(255,255,255,.08); }
+    .stage.open .curtain.left { transform: translateX(-85%); }
+    .stage.open .curtain.right { transform: translateX(85%); }
+
+    .spotlight {
+      position: absolute;
+      top: -130px;
+      width: 300px;
+      height: 490px;
+      border-radius: 50%;
+      filter: blur(12px);
+      opacity: 0;
+      z-index: 1;
+      transition: opacity .9s ease;
+    }
+
+    .spotlight.main {
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(255,244,179,.42) 0%, rgba(255,229,112,.24) 33%, rgba(255,255,255,.05) 58%, transparent 78%);
+    }
+
+    .spotlight.left {
+      left: 12%;
+      background: radial-gradient(ellipse at center, rgba(255,241,118,.16) 0%, rgba(255,255,255,.03) 55%, transparent 78%);
+    }
+
+    .spotlight.right {
+      right: 12%;
+      background: radial-gradient(ellipse at center, rgba(255,241,118,.16) 0%, rgba(255,255,255,.03) 55%, transparent 78%);
+    }
+
+    .stage.lit .spotlight { opacity: 1; }
+
+    .stage-floor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 92px;
+      background: linear-gradient(180deg, #53351f 0%, #24150d 100%);
+      z-index: 2;
+      box-shadow: inset 0 8px 18px rgba(255,255,255,.04);
+    }
+
+    .music-fx {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .45s ease;
+    }
+
+    .stage.playing .music-fx { opacity: 1; }
+
+    .music-fx span {
+      position: absolute;
+      bottom: 98px;
+      font-size: 2rem;
+      opacity: 0;
+      animation: floatUp 4.2s linear infinite;
+    }
+
+    .music-fx span:nth-child(1) { left: 30%; animation-delay: .1s; }
+    .music-fx span:nth-child(2) { left: 42%; animation-delay: 1s; }
+    .music-fx span:nth-child(3) { left: 56%; animation-delay: 2s; }
+    .music-fx span:nth-child(4) { left: 68%; animation-delay: 3s; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(24px) scale(.78); opacity: 0; }
+      14% { opacity: 1; }
+      100% { transform: translateY(-160px) scale(1.18); opacity: 0; }
+    }
+
+    .mariachi-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+    }
+
+    .mariachi {
+      position: absolute;
+      left: 50%;
+      bottom: 64px;
+      transform: translateX(-50%) translateX(-260px) scale(.92);
+      max-width: min(88%, 560px);
+      max-height: 300px;
+      object-fit: contain;
+      opacity: 0;
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,.62));
+      transition: opacity 1s ease, transform 1.15s ease;
+    }
+
+    .mariachi.show {
+      opacity: 1;
+      transform: translateX(-50%) translateX(0) scale(1);
+      animation: mariachiDance 1.7s ease-in-out infinite;
+    }
+
+    @keyframes mariachiDance {
+      0%,100% { transform: translateX(-50%) translateY(0) scale(1); }
+      25% { transform: translateX(-50%) translateY(-6px) rotate(-1deg) scale(1.01); }
+      50% { transform: translateX(-50%) translateY(0) rotate(1deg) scale(1.02); }
+      75% { transform: translateX(-50%) translateY(-5px) rotate(-1deg) scale(1.01); }
+    }
+
+    .song-banner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 54px;
+      padding: 10px 16px;
+      margin: 8px auto 16px;
+      max-width: 760px;
+      border-radius: 999px;
+      color: #fff2bf;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: .98rem;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .mid-message {
+      display: none;
+      margin: 18px auto 8px;
+      max-width: 760px;
+      padding: 16px 20px;
+      border-radius: 22px;
+      text-align: center;
+      color: #fef3c7;
+      background: linear-gradient(135deg, rgba(251,191,36,.09), rgba(244,114,182,.09));
+      border: 1px solid rgba(255,255,255,.08);
+      animation: fadeUp .7s ease;
+      line-height: 1.8;
+    }
+
+    .mid-message.show { display: block; }
+
+    .audio-box {
+      margin-top: 20px;
+      padding: 22px 18px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.11);
+      text-align: center;
+    }
+
+    audio {
+      width: min(100%, 520px);
+      margin: 12px auto 0;
+      display: block;
+    }
+
+    .playlist-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .playlist-buttons button.active-btn {
+      box-shadow: 0 0 0 2px rgba(250,204,21,.32), 0 8px 24px rgba(251,113,133,.22);
+      background: linear-gradient(135deg, rgba(245,158,11,.34), rgba(251,113,133,.25));
+    }
+
+    .heart-line {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--pink);
+      font-size: 1.14rem;
+    }
+
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 30;
+      display: none;
+    }
+
+    .confetti.show { display: block; }
+
+    .confetti span {
+      position: absolute;
+      top: -20px;
+      width: 12px;
+      height: 18px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #f59e0b, #fb7185);
+      animation: confettiFall linear forwards;
+      opacity: .9;
+    }
+
+    @keyframes confettiFall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .final-msg {
+      text-align: center;
+      font-size: 1.15rem;
+      color: var(--soft-gold);
+      line-height: 1.85;
+      max-width: 780px;
+      margin: 0 auto 10px;
+    }
+
+    .closing-sign {
+      text-align: center;
+      color: #fff0c2;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 760px) {
+      .stage { height: 390px; }
+      .mariachi { max-height: 240px; max-width: 92%; }
+      .curtain { width: 16%; }
+      .song-banner { font-size: .9rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <div class="floating-hearts">
+    <span>💖</span><span>✨</span><span>💗</span><span>🎶</span><span>💞</span><span>🌙</span>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <div class="container">
+    <div class="hero">
+      <div class="card hero-card">
+        <h1>Una serenata virtual para ti 💖</h1>
+        <p class="subtitle">
+          Esta noche no quería regalarte solo palabras… quería regalarte un momento.
+          Algo dulce, bonito y hecho con muchísimo cariño, solo para ti.
+        </p>
+        <div class="signature"><strong>By : EDZE</strong></div>
+
+        <div class="btns">
+          <button class="primary" onclick="startSerenade()">Comenzar serenata ✨</button>
+        </div>
+
+        <div class="mini">
+        </div>
+      </div>
+    </div>
+
+    <section id="serenata">
+      <div class="card">
+        <h2 class="main-title">CIERRA LOS OJOS Y DISFRUTA...</h2>
+        <div class="scene-intro" id="sceneIntro">La serenata está por comenzar...</div>
+
+        <div class="stage" id="stage">
+          <div class="curtain left"></div>
+          <div class="curtain right"></div>
+
+          <div class="spotlight main"></div>
+          <div class="spotlight left"></div>
+          <div class="spotlight right"></div>
+
+          <div class="music-fx">
+            <span>🎵</span>
+            <span>🎶</span>
+            <span>🎺</span>
+            <span>✨</span>
+          </div>
+
+          <div class="mariachi-wrap">
+            <img id="mariachi1" class="mariachi" src="mariachi1.gif" alt="Mariachi canción 1" />
+            <img id="mariachi3" class="mariachi" src="mariachi3.gif" alt="Mariachi canción 2" />
+            <img id="mariachi2" class="mariachi" src="mariachi2.gif" alt="Mariachi canción 3" />
+          </div>
+
+          <div class="stage-floor"></div>
+        </div>
+
+        <div id="songBanner" class="song-banner">Presiona comenzar y deja que suene la primera canción...</div>
+
+        <div id="midMessage" class="mid-message">
+          No quería regalarte solo canciones, quería regalarte un recuerdo.
+        </div>
+
+        <div class="audio-box">
+          <strong>Playlist de la serenata</strong>
+
+          <audio id="audio1" controls preload="auto">
+            <source src="cancion1.mp3" type="audio/mpeg">
+            <source src="cancion1.mp4" type="audio/mp4">
+            Tu navegador no pudo reproducir este audio.
+          </audio>
+
+          <audio id="audio2" controls preload="auto">
+            <source src="cancion2.mp3" type="audio/mpeg">
+            <source src="cancion2.mp4" type="audio/mp4">
+            Tu navegador no pudo reproducir este audio.
+          </audio>
+
+          <audio id="audio3" controls preload="auto">
+            <source src="cancion3.mp3" type="audio/mpeg">
+            <source src="cancion3.mp4" type="audio/mp4">
+            Tu navegador no pudo reproducir este audio.
+          </audio>
+
+          <div class="playlist-buttons">
+            <button class="secondary" id="btn1" onclick="playSong(1)">Canción 1</button>
+            <button class="secondary" id="btn2" onclick="playSong(2)">Canción 2</button>
+            <button class="secondary" id="btn3" onclick="playSong(3)">Canción 3</button>
+          </div>
+        </div>
+
+        <p class="heart-line">Cada canción lleva un pedacito de cariño para ti 💗</p>
+
+        <div class="btns">
+          <button class="primary" onclick="showSection('final')">Ver mensaje final 💌</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="final">
+      <div class="card">
+        <h2>Para ti, en tu día especial 🌷</h2>
+        <p class="final-msg">
+          No sé si esta serenata alcance a mostrar todo lo que quisiera hacerte sentir,
+          pero sí quiero que sepas algo: TE QUIERO MUCHISIMOOO, me encanta: tu sonrisa, tu mirada y lo bonita persona que eres.
+          Ojalá este detalle te haya gutado y te saque una sonrisa inmensa.
+        </p>
+        <p class="final-msg">
+          Feliz cumpleaños, preciosa. ✨<br>
+          Con muchísimo cariño, para ti.
+        </p>
+        <div class="closing-sign">Con cariño — EDZE</div>
+
+        <div class="btns">
+          <button class="secondary" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Volver al inicio</button>
+          <button class="primary" onclick="startSerenade()">Escuchar otra vez 🎶</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const audios = {
+      1: document.getElementById('audio1'),
+      2: document.getElementById('audio2'),
+      3: document.getElementById('audio3')
+    };
+
+    const mariachis = {
+      1: document.getElementById('mariachi1'),
+      2: document.getElementById('mariachi3'),
+      3: document.getElementById('mariachi2')
+    };
+
+    const titles = {
+      1: 'La serenata comienza ahora...',
+      2: 'Esta canción es para ti...',
+      3: 'Y aún falta lo mejor...'
+    };
+
+    const banners = {
+      1: 'ESOS OJITOS NEGROS.. ESA MIRADA EXTRAÑA...',
+      2: 'PIDEME LA LUNA... PIDEME LA VIDA...',
+      3: 'KE? ESTA CANCION QUE QUIERE DECIR? o_O'
+    };
+
+    let autoMode = false;
+
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetMariachis() {
+      Object.values(mariachis).forEach(img => img.classList.remove('show'));
+    }
+
+    function pauseOthers(current) {
+      Object.entries(audios).forEach(([key, audio]) => {
+        if (Number(key) !== current) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+    }
+
+    function setActiveButton(current) {
+      [1,2,3].forEach(n => {
+        const btn = document.getElementById('btn' + n);
+        btn.classList.toggle('active-btn', n === current);
+      });
+    }
+
+    function activateStage() {
+      const stage = document.getElementById('stage');
+      stage.classList.add('open');
+      stage.classList.add('lit');
+      stage.classList.add('playing');
+    }
+
+    function updateText(songNumber) {
+      document.getElementById('sceneIntro').textContent = titles[songNumber];
+      document.getElementById('songBanner').textContent = banners[songNumber];
+    }
+
+    function showMidMessage(songNumber) {
+      const box = document.getElementById('midMessage');
+      if (songNumber === 2) {
+        box.classList.add('show');
+      } else {
+        box.classList.remove('show');
+      }
+    }
+
+    function createConfetti() {
+      const container = document.getElementById('confetti');
+      container.innerHTML = '';
+      container.classList.add('show');
+
+      for (let i = 0; i < 32; i++) {
+        const piece = document.createElement('span');
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.animationDuration = (3 + Math.random() * 2.2) + 's';
+        piece.style.animationDelay = (Math.random() * .4) + 's';
+        piece.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+        container.appendChild(piece);
+      }
+
+      setTimeout(() => {
+        container.classList.remove('show');
+        container.innerHTML = '';
+      }, 5200);
+    }
+
+    function playSong(songNumber, automatic = false) {
+      autoMode = automatic;
+      showSection('serenata');
+      activateStage();
+      pauseOthers(songNumber);
+      resetMariachis();
+      setActiveButton(songNumber);
+      updateText(songNumber);
+      showMidMessage(songNumber);
+
+      const mariachi = mariachis[songNumber];
+      const audio = audios[songNumber];
+
+      audio.currentTime = 0;
+
+      setTimeout(() => {
+        mariachi.classList.add('show');
+      }, 240);
+
+      setTimeout(() => {
+        audio.play().catch(() => {});
+      }, 420);
+
+      if (songNumber === 3) {
+        createConfetti();
+      }
+    }
+
+    function startSerenade() {
+      showSection('serenata');
+      setTimeout(() => playSong(1, true), 320);
+    }
+
+    Object.entries(audios).forEach(([num, audio]) => {
+      const n = Number(num);
+
+      audio.addEventListener('play', () => {
+        activateStage();
+        pauseOthers(n);
+        resetMariachis();
+        mariachis[n].classList.add('show');
+        setActiveButton(n);
+        updateText(n);
+        showMidMessage(n);
+        document.getElementById('stage').classList.add('playing');
+        if (n === 3) createConfetti();
+      });
+
+      audio.addEventListener('ended', () => {
+        if (!autoMode) return;
+        if (n < 3) {
+          playSong(n + 1, true);
+        }
+      });
+
+      audio.addEventListener('pause', () => {
+        const someonePlaying = Object.values(audios).some(a => !a.paused && !a.ended);
+        if (!someonePlaying) {
+          document.getElementById('stage').classList.remove('playing');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
