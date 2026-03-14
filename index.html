@@ -1,777 +1,1005 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Serenata Virtual</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitácora de cumpleaños Diana</title>
   <style>
     * { box-sizing: border-box; }
 
-    :root {
-      --gold: #fef3c7;
-      --soft-gold: #fde68a;
-      --pink: #fda4af;
-      --rose: #fb7185;
-      --bg1: #020617;
-      --bg2: #0f172a;
-      --bg3: #1e1b4b;
-    }
-
     body {
       margin: 0;
-      font-family: Georgia, serif;
-      background: radial-gradient(circle at top, #172554 0%, #020617 42%, #000 100%);
-      color: #fff7ed;
-      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #071227;
+      color: #fff;
       overflow-x: hidden;
     }
 
-    .stars, .stars::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.9), transparent),
-        radial-gradient(1.5px 1.5px at 140px 80px, rgba(255,255,255,.85), transparent),
-        radial-gradient(2px 2px at 260px 160px, rgba(255,255,255,.65), transparent),
-        radial-gradient(1.5px 1.5px at 420px 120px, rgba(255,255,255,.8), transparent),
-        radial-gradient(2px 2px at 560px 240px, rgba(255,255,255,.7), transparent),
-        radial-gradient(1.5px 1.5px at 760px 70px, rgba(255,255,255,.9), transparent);
-      background-size: 800px 300px;
-      opacity: .42;
-      animation: twinkle 8s linear infinite;
-    }
-
-    .stars::after {
-      opacity: .22;
-      animation-duration: 12s;
-    }
-
-    @keyframes twinkle {
-      from { transform: translateY(0); }
-      to { transform: translateY(-44px); }
-    }
-
-    .floating-hearts span {
-      position: fixed;
-      bottom: -30px;
-      font-size: 1.25rem;
-      animation: rise 9s linear infinite;
-      opacity: .72;
-      pointer-events: none;
-    }
-
-    .floating-hearts span:nth-child(1) { left: 7%; animation-delay: 0s; }
-    .floating-hearts span:nth-child(2) { left: 20%; animation-delay: 2s; }
-    .floating-hearts span:nth-child(3) { left: 38%; animation-delay: 4s; }
-    .floating-hearts span:nth-child(4) { left: 55%; animation-delay: 1s; }
-    .floating-hearts span:nth-child(5) { left: 74%; animation-delay: 5s; }
-    .floating-hearts span:nth-child(6) { left: 88%; animation-delay: 3s; }
-
-    @keyframes rise {
-      0% { transform: translateY(0) scale(.7); opacity: 0; }
-      16% { opacity: .82; }
-      100% { transform: translateY(-120vh) scale(1.25); opacity: 0; }
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 1020px;
-      margin: 0 auto;
-      padding: 28px 18px 70px;
-    }
-
-    .hero {
+    .fondo {
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 15px;
+      background:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+        #071227;
+      background-size: 32px 32px;
+    }
+
+    .libro {
+      width: min(1120px, 100%);
+      min-height: 720px;
+      background: #0b1730;
+      border: 1px solid rgba(103,232,249,0.18);
+      border-radius: 26px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      overflow: hidden;
       display: grid;
-      place-items: center;
-      text-align: center;
+      grid-template-columns: 90px 1fr;
     }
 
-    .card {
-      width: 100%;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(14px);
+    .lomo {
+      background: linear-gradient(180deg, #081120, #0e1c39);
+      border-right: 1px solid rgba(103,232,249,0.14);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 10px;
+    }
+
+    .lomo .marca {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 12px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: #67e8f9;
+      opacity: .8;
+    }
+
+    .lomo .numero {
+      font-size: 30px;
+      font-weight: bold;
+      color: #67e8f9;
+    }
+
+    .pagina {
+      display: none;
+      min-height: 720px;
+      padding: 38px;
+      position: relative;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 100% 42px;
+    }
+
+    .pagina.activa {
+      display: block;
+      animation: aparecer .5s ease;
+    }
+
+    .etiqueta {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .45em;
+      color: #8be9f8;
+      opacity: .8;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 46px;
+      line-height: 1.08;
+    }
+
+    h2 {
+      margin: 14px 0 0 0;
+      color: #67e8f9;
+      font-weight: normal;
+      font-size: 24px;
+    }
+
+    .navegacion {
+      margin-top: 34px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .boton {
+      border: none;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+
+    .boton:hover {
+      transform: scale(1.04);
+    }
+
+    .boton-principal {
+      background: #67e8f9;
+      color: #083344;
+    }
+
+    .boton-secundario {
+      background: #1b2a49;
+      color: #fff;
       border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 30px;
-      padding: 30px 22px;
-      box-shadow: 0 20px 70px rgba(0,0,0,.45);
     }
 
-    .hero-card {
+    .boton:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .portada-arqui {
+      min-height: 640px;
+      border: 1px solid rgba(103,232,249,0.16);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at top, rgba(103,232,249,0.12), transparent 30%),
+        rgba(7,18,39,0.55);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .portada-arqui::before,
+    .portada-arqui::after {
+      content: "";
+      position: absolute;
+      inset: 24px;
+      border: 1px dashed rgba(103,232,249,0.18);
+      border-radius: 18px;
+      pointer-events: none;
+    }
+
+    .portada-arqui::after {
+      inset: 60px;
+      border-style: solid;
+      opacity: .35;
+    }
+
+    .linea-arqui { position: absolute; background: rgba(103,232,249,0.18); }
+    .la1 { left: 7%; right: 7%; top: 18%; height: 1px; }
+    .la2 { left: 7%; right: 7%; bottom: 18%; height: 1px; }
+    .la3 { top: 8%; bottom: 8%; left: 14%; width: 1px; }
+    .la4 { top: 8%; bottom: 8%; right: 14%; width: 1px; }
+    .la5 {
+      width: 130px;
+      height: 130px;
+      right: 8%;
+      top: 8%;
+      border: 1px solid rgba(103,232,249,0.22);
+      background: transparent;
+      border-radius: 50%;
+    }
+
+    .portada-contenido {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+    }
+
+    .mini-tag {
+      font-size: 12px;
+      letter-spacing: .5em;
+      text-transform: uppercase;
+      color: #8be9f8;
+      opacity: .85;
+      margin-bottom: 18px;
+    }
+
+    .titulo-portada {
+      font-size: clamp(2.7rem, 6vw, 5rem);
+      font-weight: bold;
+      line-height: 1.05;
+      color: #fff;
+    }
+
+    .titulo-portada span {
+      display: block;
+      color: #67e8f9;
+      margin-top: 10px;
+    }
+
+    .sub-portada {
+      margin: 24px auto 0 auto;
+      max-width: 700px;
+      font-size: 20px;
+      line-height: 1.8;
+      color: #dbe7ff;
+    }
+
+    .ficha-arqui {
+      margin: 28px auto 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      color: #eaf6ff;
+      font-size: 14px;
+    }
+
+    .perritos {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin-top: 34px;
+      flex-wrap: wrap;
+    }
+
+    .perrito {
+      max-width: 220px;
+      text-align: center;
+      animation: subir .8s ease;
+    }
+
+    .perrito img {
+      width: 200px;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .perrito h3 {
+      font-size: 20px;
+      margin: 16px 0 10px 0;
+    }
+
+    .dialogo {
+      margin: 0;
+      background: #172744;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 16px;
+      line-height: 1.45;
+      color: #fff;
+    }
+
+    .mesa {
+      margin: 40px auto 0 auto;
+      width: min(780px,100%);
+      text-align: center;
+      transition: background .8s ease;
+      border-radius: 28px;
+      padding: 25px 20px 30px 20px;
+    }
+
+    .mesa.oscura {
+      background: rgba(255,213,79,0.05);
+    }
+
+    .torta {
+      margin: 0 auto;
+      position: relative;
+      width: 240px;
+      height: 240px;
+    }
+
+    .base-torta {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 230px;
+      height: 120px;
+      background: #f8c6d4;
+      border-radius: 35px 35px 22px 22px;
+      border: 2px solid rgba(255,255,255,0.18);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+
+    .vela {
+      position: absolute;
+      bottom: 112px;
+      width: 11px;
+      height: 60px;
+      background: #dbeafe;
+      border-radius: 6px;
+    }
+
+    .vela1 { left: 64px; }
+    .vela2 { left: 112px; }
+    .vela3 { left: 160px; }
+
+    .llama {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 28px;
+      background: #fcd34d;
+      border-radius: 50%;
+      box-shadow: 0 0 18px #fcd34d, 0 0 35px rgba(252,211,77,0.65);
+      animation: parpadeo .9s infinite;
+    }
+
+    .apagada { display: none; }
+
+    .tabla {
+      width: 100%;
+      height: 18px;
+      background: #596579;
+      border-radius: 20px;
+      margin-top: 22px;
+    }
+
+    .mensaje-torta {
+      margin-top: 26px;
+      font-size: 22px;
+      color: #e7f2ff;
+      line-height: 1.6;
+    }
+
+    .tarjeta-mensaje {
+      margin-top: 30px;
+      background: #101d38;
+      border: 1px solid rgba(103,232,249,0.16);
+      border-radius: 22px;
+      padding: 28px;
+      max-width: 920px;
+      font-size: 21px;
+      line-height: 1.85;
+      color: #e8f0ff;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+
+    .regalo-wrap {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .caja-regalo {
+      min-height: 420px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(236,72,153,0.12), rgba(103,232,249,0.06));
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
       overflow: hidden;
     }
 
-    .hero-card::before {
+    .gift-box {
+      width: 240px;
+      height: 200px;
+      background: #ec4899;
+      border-radius: 18px;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.24);
+    }
+
+    .gift-box::before {
       content: "";
       position: absolute;
-      inset: -30% auto auto 50%;
-      width: 360px;
-      height: 360px;
+      inset: -34px 0 auto 0;
+      height: 52px;
+      background: #f472b6;
+      border-radius: 18px 18px 8px 8px;
+    }
+
+    .gift-box::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
       transform: translateX(-50%);
-      background: radial-gradient(circle, rgba(250,204,21,.18) 0%, rgba(244,114,182,.12) 35%, transparent 72%);
-      filter: blur(18px);
-      pointer-events: none;
+      width: 28px;
+      height: 200px;
+      background: #fde68a;
     }
 
-    h1 {
+    .moño, .moño2 {
+      position: absolute;
+      width: 84px;
+      height: 50px;
+      border: 10px solid #fde68a;
+      border-radius: 50%;
+      top: -55px;
+    }
+
+    .moño { left: 54px; transform: rotate(-20deg); }
+    .moño2 { right: 54px; transform: rotate(20deg); }
+
+    .telefono {
+      width: 220px;
+      height: 390px;
+      border-radius: 30px;
+      background: #111827;
+      border: 4px solid rgba(255,255,255,0.18);
       position: relative;
-      z-index: 1;
-      margin: 0;
-      font-size: clamp(2.2rem, 6vw, 4.8rem);
-      line-height: 1.03;
-      color: var(--gold);
-      text-shadow: 0 5px 18px rgba(0,0,0,.45);
-    }
-
-    .subtitle {
-      position: relative;
-      z-index: 1;
-      margin: 16px auto 0;
-      max-width: 720px;
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: var(--soft-gold);
-      line-height: 1.75;
-    }
-
-    .signature {
-      margin-top: 12px;
-      font-size: 1.06rem;
-      color: #fff1c7;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      text-shadow: 0 0 12px rgba(255,255,255,.12);
-    }
-
-    .btns {
-      margin-top: 28px;
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    button {
-      border: none;
-      border-radius: 999px;
-      padding: 14px 22px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform .22s ease, box-shadow .22s ease, background .22s ease, opacity .22s ease;
-    }
-
-    button:hover { transform: translateY(-2px) scale(1.03); }
-
-    .primary {
-      background: linear-gradient(135deg, #f59e0b, #fb7185);
-      color: white;
-      box-shadow: 0 8px 26px rgba(251, 113, 133, .34);
-    }
-
-    .secondary {
-      background: rgba(255,255,255,.12);
-      color: #fff7ed;
-      border: 1px solid rgba(255,255,255,.18);
-    }
-
-    .mini {
-      font-size: .97rem;
-      color: #e2e8f0;
-      text-align: center;
-      margin-top: 12px;
-      line-height: 1.65;
-    }
-
-    section {
-      margin-top: 34px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.35);
       display: none;
-      animation: fadeUp .75s ease;
+      overflow: hidden;
     }
 
-    section.active { display: block; }
+    .telefono.abierto {
+      display: block;
+      animation: subir .7s ease;
+    }
 
-    @keyframes fadeUp {
+    .telefono img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 26px;
+      display: block;
+    }
+
+    .regalo-texto {
+      font-size: 20px;
+      line-height: 1.85;
+      color: #e7f0ff;
+    }
+
+    .lista-audios {
+      margin-top: 30px;
+      display: grid;
+      gap: 18px;
+      max-width: 920px;
+    }
+
+    .audio-card {
+      background: #101d38;
+      border: 1px solid rgba(103,232,249,0.16);
+      border-radius: 20px;
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+
+    .audio-card strong {
+      font-size: 22px;
+      color: #ffffff;
+    }
+
+    .audio-card span {
+      color: #cbd5e1;
+      font-size: 16px;
+      display: block;
+      margin-top: 6px;
+    }
+
+    .estado-audio {
+      margin-top: 26px;
+      font-size: 20px;
+      color: #e7f2ff;
+      line-height: 1.6;
+    }
+
+    .final-wrap {
+      margin-top: 34px;
+      text-align: center;
+      max-width: 920px;
+    }
+
+    .final-grande {
+      font-size: clamp(2.3rem, 6vw, 4.6rem);
+      font-weight: bold;
+      line-height: 1.15;
+      color: #ffffff;
+      margin-bottom: 18px;
+    }
+
+    .final-grande span {
+      display: block;
+      color: #67e8f9;
+      margin-top: 10px;
+    }
+
+    .final-sub {
+      font-size: 22px;
+      color: #dbe7ff;
+      line-height: 1.8;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .confeti {
+      position: fixed;
+      top: -20px;
+      width: 12px;
+      height: 20px;
+      opacity: 0;
+      z-index: 999;
+      animation: caer 3s linear forwards;
+    }
+
+    @keyframes caer {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 1; }
+    }
+
+    @keyframes parpadeo {
+      0%,100% { transform: translateX(-50%) scale(1); opacity: 1; }
+      50% { transform: translateX(-50%) scale(1.12); opacity: .85; }
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes subir {
       from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    h2 {
-      margin-top: 0;
-      text-align: center;
-      color: var(--gold);
-      font-size: clamp(1.8rem, 4vw, 2.7rem);
-    }
-
-    .main-title {
-      font-family: "Times New Roman", serif;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      text-shadow: 0 0 18px rgba(250,204,21,.18), 0 4px 16px rgba(0,0,0,.36);
-      animation: glowTitle 3.2s ease-in-out infinite alternate;
-    }
-
-    @keyframes glowTitle {
-      from { opacity: .9; transform: scale(1); }
-      to { opacity: 1; transform: scale(1.015); }
-    }
-
-    .scene-intro {
-      text-align: center;
-      color: #f8e8b0;
-      font-size: 1.06rem;
-      min-height: 30px;
-      margin-bottom: 14px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .stage {
-      position: relative;
-      height: 460px;
-      margin: 24px auto 18px;
-      max-width: 900px;
-      border-radius: 32px;
-      background: linear-gradient(180deg, rgba(0,0,0,.98) 0%, rgba(4,10,24,1) 50%, rgba(16,16,16,1) 100%);
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.08);
-      box-shadow: inset 0 -40px 95px rgba(0,0,0,.95), 0 22px 65px rgba(0,0,0,.5);
-    }
-
-    .stage::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 0 0;
-      height: 120px;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 38%, rgba(0,0,0,.62) 100%);
-      z-index: 3;
-      pointer-events: none;
-    }
-
-    .curtain {
-      position: absolute;
-      top: 0;
-      width: 18%;
-      height: 100%;
-      background: linear-gradient(90deg, #4a0909, #7f1d1d, #4a0909);
-      opacity: .92;
-      z-index: 7;
-      transition: transform 1.4s ease;
-      box-shadow: inset 0 0 26px rgba(0,0,0,.28);
-    }
-
-    .curtain.left { left: 0; border-right: 1px solid rgba(255,255,255,.08); }
-    .curtain.right { right: 0; border-left: 1px solid rgba(255,255,255,.08); }
-    .stage.open .curtain.left { transform: translateX(-85%); }
-    .stage.open .curtain.right { transform: translateX(85%); }
-
-    .spotlight {
-      position: absolute;
-      top: -130px;
-      width: 300px;
-      height: 490px;
-      border-radius: 50%;
-      filter: blur(12px);
-      opacity: 0;
-      z-index: 1;
-      transition: opacity .9s ease;
-    }
-
-    .spotlight.main {
-      left: 50%;
-      transform: translateX(-50%);
-      background: radial-gradient(ellipse at center, rgba(255,244,179,.42) 0%, rgba(255,229,112,.24) 33%, rgba(255,255,255,.05) 58%, transparent 78%);
-    }
-
-    .spotlight.left {
-      left: 12%;
-      background: radial-gradient(ellipse at center, rgba(255,241,118,.16) 0%, rgba(255,255,255,.03) 55%, transparent 78%);
-    }
-
-    .spotlight.right {
-      right: 12%;
-      background: radial-gradient(ellipse at center, rgba(255,241,118,.16) 0%, rgba(255,255,255,.03) 55%, transparent 78%);
-    }
-
-    .stage.lit .spotlight { opacity: 1; }
-
-    .stage-floor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 92px;
-      background: linear-gradient(180deg, #53351f 0%, #24150d 100%);
-      z-index: 2;
-      box-shadow: inset 0 8px 18px rgba(255,255,255,.04);
-    }
-
-    .music-fx {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity .45s ease;
-    }
-
-    .stage.playing .music-fx { opacity: 1; }
-
-    .music-fx span {
-      position: absolute;
-      bottom: 98px;
-      font-size: 2rem;
-      opacity: 0;
-      animation: floatUp 4.2s linear infinite;
-    }
-
-    .music-fx span:nth-child(1) { left: 30%; animation-delay: .1s; }
-    .music-fx span:nth-child(2) { left: 42%; animation-delay: 1s; }
-    .music-fx span:nth-child(3) { left: 56%; animation-delay: 2s; }
-    .music-fx span:nth-child(4) { left: 68%; animation-delay: 3s; }
-
-    @keyframes floatUp {
-      0% { transform: translateY(24px) scale(.78); opacity: 0; }
-      14% { opacity: 1; }
-      100% { transform: translateY(-160px) scale(1.18); opacity: 0; }
-    }
-
-    .mariachi-wrap {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-    }
-
-    .mariachi {
-      position: absolute;
-      left: 50%;
-      bottom: 64px;
-      transform: translateX(-50%) translateX(-260px) scale(.92);
-      max-width: min(88%, 560px);
-      max-height: 300px;
-      object-fit: contain;
-      opacity: 0;
-      filter: drop-shadow(0 20px 30px rgba(0,0,0,.62));
-      transition: opacity 1s ease, transform 1.15s ease;
-    }
-
-    .mariachi.show {
-      opacity: 1;
-      transform: translateX(-50%) translateX(0) scale(1);
-      animation: mariachiDance 1.7s ease-in-out infinite;
-    }
-
-    @keyframes mariachiDance {
-      0%,100% { transform: translateX(-50%) translateY(0) scale(1); }
-      25% { transform: translateX(-50%) translateY(-6px) rotate(-1deg) scale(1.01); }
-      50% { transform: translateX(-50%) translateY(0) rotate(1deg) scale(1.02); }
-      75% { transform: translateX(-50%) translateY(-5px) rotate(-1deg) scale(1.01); }
-    }
-
-    .song-banner {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      min-height: 54px;
-      padding: 10px 16px;
-      margin: 8px auto 16px;
-      max-width: 760px;
-      border-radius: 999px;
-      color: #fff2bf;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.08);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      font-size: .98rem;
-      transition: opacity .35s ease, transform .35s ease;
-    }
-
-    .mid-message {
-      display: none;
-      margin: 18px auto 8px;
-      max-width: 760px;
-      padding: 16px 20px;
-      border-radius: 22px;
-      text-align: center;
-      color: #fef3c7;
-      background: linear-gradient(135deg, rgba(251,191,36,.09), rgba(244,114,182,.09));
-      border: 1px solid rgba(255,255,255,.08);
-      animation: fadeUp .7s ease;
-      line-height: 1.8;
-    }
-
-    .mid-message.show { display: block; }
-
-    .audio-box {
-      margin-top: 20px;
-      padding: 22px 18px;
-      border-radius: 24px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.11);
-      text-align: center;
-    }
-
-    audio {
-      width: min(100%, 520px);
-      margin: 12px auto 0;
-      display: block;
-    }
-
-    .playlist-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 18px;
-    }
-
-    .playlist-buttons button.active-btn {
-      box-shadow: 0 0 0 2px rgba(250,204,21,.32), 0 8px 24px rgba(251,113,133,.22);
-      background: linear-gradient(135deg, rgba(245,158,11,.34), rgba(251,113,133,.25));
-    }
-
-    .heart-line {
-      margin-top: 18px;
-      text-align: center;
-      color: var(--pink);
-      font-size: 1.14rem;
-    }
-
-    .confetti {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 30;
-      display: none;
-    }
-
-    .confetti.show { display: block; }
-
-    .confetti span {
-      position: absolute;
-      top: -20px;
-      width: 12px;
-      height: 18px;
-      border-radius: 4px;
-      background: linear-gradient(180deg, #f59e0b, #fb7185);
-      animation: confettiFall linear forwards;
-      opacity: .9;
-    }
-
-    @keyframes confettiFall {
-      to {
-        transform: translateY(110vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
-
-    .final-msg {
-      text-align: center;
-      font-size: 1.15rem;
-      color: var(--soft-gold);
-      line-height: 1.85;
-      max-width: 780px;
-      margin: 0 auto 10px;
-    }
-
-    .closing-sign {
-      text-align: center;
-      color: #fff0c2;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      margin-top: 18px;
-    }
-
-    @media (max-width: 760px) {
-      .stage { height: 390px; }
-      .mariachi { max-height: 240px; max-width: 92%; }
-      .curtain { width: 16%; }
-      .song-banner { font-size: .9rem; }
+    @media (max-width:900px) {
+      .libro { grid-template-columns: 1fr; }
+      .lomo { display: none; }
+      .pagina { min-height: auto; padding: 28px 18px; }
+      h1 { font-size: 34px; }
+      h2 { font-size: 20px; }
+      .tarjeta-mensaje, .mensaje-torta, .regalo-texto, .sub-portada, .estado-audio, .final-sub { font-size: 18px; }
+      .regalo-wrap { grid-template-columns: 1fr; }
+      .audio-card strong { font-size: 20px; }
     }
   </style>
 </head>
 <body>
-  <div class="stars"></div>
+  <div class="fondo">
+    <div class="libro">
+      <aside class="lomo">
+        <div class="marca">Bitácora Diana</div>
+        <div class="numero" id="numeroPagina">1</div>
+      </aside>
 
-  <div class="floating-hearts">
-    <span>💖</span><span>✨</span><span>💗</span><span>🎶</span><span>💞</span><span>🌙</span>
-  </div>
+      <main>
+        <section id="pagina1" class="pagina activa">
+          <div class="etiqueta">Portada arquitectónica</div>
+          <div class="portada-arqui">
+            <div class="linea-arqui la1"></div>
+            <div class="linea-arqui la2"></div>
+            <div class="linea-arqui la3"></div>
+            <div class="linea-arqui la4"></div>
+            <div class="linea-arqui la5"></div>
 
-  <div class="confetti" id="confetti"></div>
+            <div class="portada-contenido">
+              <div class="mini-tag">Proyecto especial</div>
+              <div class="titulo-portada">
+                Bitácora de cumpleaños
+                <span>Diana</span>
+              </div>
+              <div class="sub-portada">
+                Un pequeño proyecto diseñado con cariño para una futura gran arquitecta. Abre esta bitácora y descubre una sorpresa hecha especialmente para ti. By: EDZE.
+              </div>
+              <div class="ficha-arqui">
+                <div class="chip">Escala 1:1 cariño</div>
+                <div class="chip">Material: sentimientos</div>
+                <div class="chip">Estado: nervioso</div>
+              </div>
 
-  <div class="container">
-    <div class="hero">
-      <div class="card hero-card">
-        <h1>Una serenata virtual para ti 💖</h1>
-        <p class="subtitle">
-          Esta noche no quería regalarte solo palabras… quería regalarte un momento.
-          Algo dulce, bonito y hecho con muchísimo cariño, solo para ti.
-        </p>
-        <div class="signature"><strong>By : EDZE</strong></div>
+              <div class="navegacion" style="justify-content:flex-end; margin-top:34px;">
+                <button class="boton boton-principal" onclick="abrirBitacora()">Abrir bitácora</button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        <div class="btns">
-          <button class="primary" onclick="startSerenade()">Comenzar serenata ✨</button>
-        </div>
+        <section id="pagina2" class="pagina">
+          <div class="etiqueta">Bienvenida</div>
+          <h1>Te saludamos todos</h1>
+          <h2>Tus hijos peluditos de esta bitácora</h2>
 
-        <div class="mini">
-        </div>
-      </div>
+          <div class="perritos">
+            <div class="perrito">
+              <img src="luna.jpg" alt="Luna">
+              <h3>Luna</h3>
+              <p class="dialogo">Hola Mami 🐾<br>Hoy es un día muy especial.</p>
+            </div>
+
+            <div class="perrito">
+              <img src="tayron.jpg" alt="Tayron">
+              <h3>Tayron</h3>
+              <p class="dialogo">Preparamos una pequeña sorpresa para ti (tiembla).</p>
+            </div>
+
+            <div class="perrito">
+              <img src="max.jpg" alt="Max">
+              <h3>Max</h3>
+              <p class="dialogo">¡Así que prepárate y pasa a la siguiente pagina! 🎉</p>
+            </div>
+          </div>
+
+          <div class="navegacion">
+            <button class="boton boton-secundario" onclick="irAPagina(1)">Página anterior</button>
+            <button class="boton boton-principal" onclick="irAPagina(3)">Siguiente página</button>
+          </div>
+        </section>
+
+        <section id="pagina3" class="pagina">
+          <div class="etiqueta">Celebración</div>
+          <h1>La torta está lista 🎂</h1>
+          <h2>Primero cantamos… y al final apagas las velitas</h2>
+
+          <div class="mesa" id="mesaCumple">
+            <div class="torta">
+              <div class="base-torta"></div>
+              <div class="vela vela1"><div class="llama" id="llama1"></div></div>
+              <div class="vela vela2"><div class="llama" id="llama2"></div></div>
+              <div class="vela vela3"><div class="llama" id="llama3"></div></div>
+            </div>
+            <div class="tabla"></div>
+          </div>
+
+          <p class="mensaje-torta" id="textoCumple">Presiona el botón para comenzar la canción de cumpleaños 🎶</p>
+
+          <div class="navegacion">
+            <button class="boton boton-secundario" onclick="irAPagina(2)">Página anterior</button>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+              <button class="boton boton-principal" id="btnCancion" onclick="iniciarCancionCumple()">Empezar canción</button>
+              <button class="boton boton-principal" id="btnApagar" onclick="apagarVelas()" style="display:none;">Apagar velitas</button>
+              <button class="boton boton-principal" id="btnSiguienteMensaje" onclick="irAPagina(4)" style="display:none;">Siguiente página</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="pagina4" class="pagina">
+          <div class="etiqueta">Mensaje especial</div>
+          <h1>Para Diana 💙</h1>
+          <h2>te quiero y aprecio señorita</h2>
+
+          <div class="tarjeta-mensaje">
+            Señorita mia en este dia tan especial, te quiero decir que seras la mejor arquitecta de todo el universo!. Todo gracias a tu esfuerzo y perseverancia, te acompañe una parte del camino y espero acopañarte hasta que me lo permitas, cumples 21!!! Te deseo lo mejor y que vivas la vida que quieras vivir, que siempre estes feliz y tranquila, feliz cumpleaños te lo desea alguien que te quiere muchooooo
+          </div>
+
+          <div class="navegacion">
+            <button class="boton boton-secundario" onclick="irAPagina(3)">Página anterior</button>
+            <button class="boton boton-principal" onclick="irAPagina(5)">Siguiente página</button>
+          </div>
+        </section>
+
+        <section id="pagina5" class="pagina">
+          <div class="etiqueta">Regalo sorpresa</div>
+          <h1>Hay un regalo para ti 🎁</h1>
+          <h2>Ábrelo para descubrir la sorpresa</h2>
+
+          <div class="regalo-wrap">
+            <div class="caja-regalo">
+              <div class="gift-box" id="giftBox">
+                <div class="moño"></div>
+                <div class="moño2"></div>
+              </div>
+
+              <div class="telefono" id="telefonoZflip">
+                <img src="zflip.jpg" alt="Samsung Z Flip">
+              </div>
+            </div>
+
+            <div>
+              <p class="regalo-texto" id="textoRegalo">
+                PARA TIIII, PRECIOSA, HERMOSA, BELLA :D
+              </p>
+
+              <div class="navegacion" style="justify-content:flex-start; margin-top:24px;">
+                <button class="boton boton-principal" id="btnAbrirRegalo" onclick="abrirRegalo()">Abrir regalo</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="navegacion">
+            <button class="boton boton-secundario" onclick="irAPagina(4)">Página anterior</button>
+            <button class="boton boton-principal" onclick="irAPagina(6)">Siguiente página</button>
+          </div>
+        </section>
+
+        <section id="pagina6" class="pagina">
+          <div class="etiqueta">Mensajes especiales</div>
+          <h1>Palabras de personitas que te quieren 💙</h1>
+          <h2>Espero no te moleste haberme tomado el atrevimiento</h2>
+
+          <div class="lista-audios">
+            <div class="audio-card">
+              <div>
+                <strong>Mamá</strong>
+                <span>Un mensajito especial para Diana</span>
+              </div>
+              <button class="boton boton-principal" onclick="reproducirAudio('mama.mp4', 'Mamá')">Escuchar</button>
+            </div>
+
+            <div class="audio-card">
+              <div>
+                <strong>Erika</strong>
+                <span>Un mensajito especial para Diana</span>
+              </div>
+              <button class="boton boton-principal" onclick="reproducirAudio('erika.mp4', 'Erika')">Escuchar</button>
+            </div>
+
+            <div class="audio-card">
+              <div>
+                <strong>Papá</strong>
+                <span>Un mensajito especial para Diana</span>
+              </div>
+              <button class="boton boton-principal" onclick="reproducirAudio('papa.mp4', 'Papá')">Escuchar</button>
+            </div>
+
+            <div class="audio-card">
+              <div>
+                <strong>Ale</strong>
+                <span>Un mensajito especial para Diana</span>
+              </div>
+              <button class="boton boton-principal" onclick="reproducirAudio('Ale.mp4', 'Ale')">Escuchar</button>
+            </div>
+
+            <div class="audio-card">
+              <div>
+                <strong>Liam</strong>
+                <span>Un mensajito especial para Diana</span>
+              </div>
+              <button class="boton boton-principal" onclick="reproducirAudio('Liam.mp4', 'Liam')">Escuchar</button>
+            </div>
+          </div>
+
+          <p class="estado-audio" id="estadoAudio">
+            Aquí aparecerá qué mensaje se está reproduciendo.
+          </p>
+
+          <div class="navegacion">
+            <button class="boton boton-secundario" onclick="irAPagina(5)">Página anterior</button>
+            <button class="boton boton-principal" onclick="irAPagina(7)">Siguiente página</button>
+          </div>
+        </section>
+
+        <section id="pagina7" class="pagina">
+          <div class="etiqueta">Sorpresa final</div>
+          <div class="final-wrap">
+            <div class="final-grande">
+              ¿Creías que eso era todo?
+              <span>✨</span>
+            </div>
+            <p class="final-sub">
+              Esta bitácora fue solo el comienzo.  
+              Aún queda una última sorpresa esperándote al final de este recorrido ¿Que sera?.
+            </p>
+
+            <div class="tarjeta-mensaje" style="text-align:center; max-width:850px; margin-left:auto; margin-right:auto;">
+              Presiona el botón y descubre tu sorpresa especial 💙
+            </div>
+
+            <div class="navegacion" style="justify-content:center; margin-top:30px;">
+              <a
+                href="https://fascinating-marshmallow-b00a7c.netlify.app/"
+                target="_blank"
+                class="boton boton-principal"
+                style="text-decoration:none; display:inline-block;"
+              >
+                Abrir sorpresa
+              </a>
+            </div>
+          </div>
+
+          <div class="navegacion">
+            <button class="boton boton-secundario" onclick="irAPagina(6)">Página anterior</button>
+            <button class="boton boton-principal" disabled>Fin de la bitácora</button>
+          </div>
+        </section>
+      </main>
     </div>
-
-    <section id="serenata">
-      <div class="card">
-        <h2 class="main-title">CIERRA LOS OJOS Y DISFRUTA...</h2>
-        <div class="scene-intro" id="sceneIntro">La serenata está por comenzar...</div>
-
-        <div class="stage" id="stage">
-          <div class="curtain left"></div>
-          <div class="curtain right"></div>
-
-          <div class="spotlight main"></div>
-          <div class="spotlight left"></div>
-          <div class="spotlight right"></div>
-
-          <div class="music-fx">
-            <span>🎵</span>
-            <span>🎶</span>
-            <span>🎺</span>
-            <span>✨</span>
-          </div>
-
-          <div class="mariachi-wrap">
-            <img id="mariachi1" class="mariachi" src="mariachi1.gif" alt="Mariachi canción 1" />
-            <img id="mariachi3" class="mariachi" src="mariachi3.gif" alt="Mariachi canción 2" />
-            <img id="mariachi2" class="mariachi" src="mariachi2.gif" alt="Mariachi canción 3" />
-          </div>
-
-          <div class="stage-floor"></div>
-        </div>
-
-        <div id="songBanner" class="song-banner">Presiona comenzar y deja que suene la primera canción...</div>
-
-        <div id="midMessage" class="mid-message">
-          No quería regalarte solo canciones, quería regalarte un recuerdo.
-        </div>
-
-        <div class="audio-box">
-          <strong>Playlist de la serenata</strong>
-
-          <audio id="audio1" controls preload="auto">
-            <source src="cancion1.mp3" type="audio/mpeg">
-            <source src="cancion1.mp4" type="audio/mp4">
-            Tu navegador no pudo reproducir este audio.
-          </audio>
-
-          <audio id="audio2" controls preload="auto">
-            <source src="cancion2.mp3" type="audio/mpeg">
-            <source src="cancion2.mp4" type="audio/mp4">
-            Tu navegador no pudo reproducir este audio.
-          </audio>
-
-          <audio id="audio3" controls preload="auto">
-            <source src="cancion3.mp3" type="audio/mpeg">
-            <source src="cancion3.mp4" type="audio/mp4">
-            Tu navegador no pudo reproducir este audio.
-          </audio>
-
-          <div class="playlist-buttons">
-            <button class="secondary" id="btn1" onclick="playSong(1)">Canción 1</button>
-            <button class="secondary" id="btn2" onclick="playSong(2)">Canción 2</button>
-            <button class="secondary" id="btn3" onclick="playSong(3)">Canción 3</button>
-          </div>
-        </div>
-
-        <p class="heart-line">Cada canción lleva un pedacito de cariño para ti 💗</p>
-
-        <div class="btns">
-          <button class="primary" onclick="showSection('final')">Ver mensaje final 💌</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="final">
-      <div class="card">
-        <h2>Para ti, en tu día especial 🌷</h2>
-        <p class="final-msg">
-          No sé si esta serenata alcance a mostrar todo lo que quisiera hacerte sentir,
-          pero sí quiero que sepas algo: TE QUIERO MUCHISIMOOO, me encanta: tu sonrisa, tu mirada y lo bonita persona que eres.
-          Ojalá este detalle te haya gutado y te saque una sonrisa inmensa.
-        </p>
-        <p class="final-msg">
-          Feliz cumpleaños, preciosa. ✨<br>
-          Con muchísimo cariño, para ti.
-        </p>
-        <div class="closing-sign">Con cariño — EDZE</div>
-
-        <div class="btns">
-          <button class="secondary" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Volver al inicio</button>
-          <button class="primary" onclick="startSerenade()">Escuchar otra vez 🎶</button>
-        </div>
-      </div>
-    </section>
   </div>
 
   <script>
-    const audios = {
-      1: document.getElementById('audio1'),
-      2: document.getElementById('audio2'),
-      3: document.getElementById('audio3')
-    };
+    let paginaActual = 1;
+    let cancionTerminada = false;
+    let regaloAbierto = false;
+    let audioCumple = null;
+    let audioMensajes = null;
 
-    const mariachis = {
-      1: document.getElementById('mariachi1'),
-      2: document.getElementById('mariachi3'),
-      3: document.getElementById('mariachi2')
-    };
-
-    const titles = {
-      1: 'La serenata comienza ahora...',
-      2: 'Esta canción es para ti...',
-      3: 'Y aún falta lo mejor...'
-    };
-
-    const banners = {
-      1: 'ESOS OJITOS NEGROS.. ESA MIRADA EXTRAÑA...',
-      2: 'PIDEME LA LUNA... PIDEME LA VIDA...',
-      3: 'KE? ESTA CANCION QUE QUIERE DECIR? o_O'
-    };
-
-    let autoMode = false;
-
-    function showSection(id) {
-      document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    function irAPagina(numero){
+      reproducirSonidoPagina();
+      document.getElementById("pagina" + paginaActual).classList.remove("activa");
+      document.getElementById("pagina" + numero).classList.add("activa");
+      paginaActual = numero;
+      document.getElementById("numeroPagina").textContent = numero;
     }
 
-    function resetMariachis() {
-      Object.values(mariachis).forEach(img => img.classList.remove('show'));
+    function abrirBitacora(){
+      reproducirSonidoPuerta();
+      setTimeout(() => { irAPagina(2); }, 450);
     }
 
-    function pauseOthers(current) {
-      Object.entries(audios).forEach(([key, audio]) => {
-        if (Number(key) !== current) {
-          audio.pause();
-          audio.currentTime = 0;
+    function reproducirSonidoPuerta(){
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+
+        osc1.type = "sawtooth";
+        osc2.type = "triangle";
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(1000, ctx.currentTime);
+        osc1.frequency.setValueAtTime(200, ctx.currentTime);
+        osc1.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.7);
+        osc2.frequency.setValueAtTime(110, ctx.currentTime);
+        osc2.frequency.exponentialRampToValueAtTime(55, ctx.currentTime + 0.7);
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.14, ctx.currentTime + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.8);
+
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        osc1.start();
+        osc2.start();
+        osc1.stop(ctx.currentTime + 0.82);
+        osc2.stop(ctx.currentTime + 0.82);
+      }catch(e){}
+    }
+
+    function reproducirSonidoPagina(){
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const bufferSize = ctx.sampleRate * 0.15;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+
+        for(let i = 0; i < bufferSize; i++){
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-5 * i / bufferSize);
         }
-      });
+
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        const gain = ctx.createGain();
+        gain.gain.value = 0.06;
+        source.connect(gain);
+        gain.connect(ctx.destination);
+        source.start();
+      }catch(e){}
     }
 
-    function setActiveButton(current) {
-      [1,2,3].forEach(n => {
-        const btn = document.getElementById('btn' + n);
-        btn.classList.toggle('active-btn', n === current);
-      });
-    }
+    function iniciarCancionCumple(){
+      const btn = document.getElementById("btnCancion");
+      btn.disabled = true;
+      btn.textContent = "Reproduciendo...";
+      document.getElementById("textoCumple").innerHTML = "🎵 Escucha esta canción especial... 🎵";
 
-    function activateStage() {
-      const stage = document.getElementById('stage');
-      stage.classList.add('open');
-      stage.classList.add('lit');
-      stage.classList.add('playing');
-    }
+      try{
+        audioCumple = document.createElement("video");
+        audioCumple.src = "cancion cumpleaños.mp4";
+        audioCumple.volume = 1;
+        audioCumple.play();
 
-    function updateText(songNumber) {
-      document.getElementById('sceneIntro').textContent = titles[songNumber];
-      document.getElementById('songBanner').textContent = banners[songNumber];
-    }
+        audioCumple.onended = function(){
+          cancionTerminada = true;
+          document.getElementById("textoCumple").innerHTML = "✨ La canción terminó. Ahora sí pide tu deseo y apaga las velitas.";
+          document.getElementById("btnApagar").style.display = "inline-block";
+        };
 
-    function showMidMessage(songNumber) {
-      const box = document.getElementById('midMessage');
-      if (songNumber === 2) {
-        box.classList.add('show');
-      } else {
-        box.classList.remove('show');
+        audioCumple.onerror = function(){
+          document.getElementById("textoCumple").innerHTML = "No se pudo reproducir el audio. Revisa que el archivo se llame exactamente: cancion cumpleaños.mp4";
+        };
+      }catch(e){
+        document.getElementById("textoCumple").innerHTML = "No se pudo reproducir el audio.";
       }
     }
 
-    function createConfetti() {
-      const container = document.getElementById('confetti');
-      container.innerHTML = '';
-      container.classList.add('show');
+    function reproducirAplausos(){
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        for(let j = 0; j < 10; j++){
+          const bufferSize = ctx.sampleRate * 0.1;
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
 
-      for (let i = 0; i < 32; i++) {
-        const piece = document.createElement('span');
-        piece.style.left = Math.random() * 100 + '%';
-        piece.style.animationDuration = (3 + Math.random() * 2.2) + 's';
-        piece.style.animationDelay = (Math.random() * .4) + 's';
-        piece.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
-        container.appendChild(piece);
-      }
+          for(let i = 0; i < bufferSize; i++){
+            data[i] = (Math.random() * 2 - 1) * Math.exp(-10 * i / bufferSize);
+          }
 
-      setTimeout(() => {
-        container.classList.remove('show');
-        container.innerHTML = '';
-      }, 5200);
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          const gain = ctx.createGain();
+          gain.gain.value = 0.08;
+          source.connect(gain);
+          gain.connect(ctx.destination);
+          source.start(ctx.currentTime + j * 0.1);
+        }
+      }catch(e){}
     }
 
-    function playSong(songNumber, automatic = false) {
-      autoMode = automatic;
-      showSection('serenata');
-      activateStage();
-      pauseOthers(songNumber);
-      resetMariachis();
-      setActiveButton(songNumber);
-      updateText(songNumber);
-      showMidMessage(songNumber);
-
-      const mariachi = mariachis[songNumber];
-      const audio = audios[songNumber];
-
-      audio.currentTime = 0;
-
-      setTimeout(() => {
-        mariachi.classList.add('show');
-      }, 240);
-
-      setTimeout(() => {
-        audio.play().catch(() => {});
-      }, 420);
-
-      if (songNumber === 3) {
-        createConfetti();
+    function crearConfeti(){
+      const colores = ["#67e8f9","#f9a8d4","#fde68a","#c4b5fd","#86efac"];
+      for(let i = 0; i < 90; i++){
+        const confeti = document.createElement("div");
+        confeti.classList.add("confeti");
+        confeti.style.left = Math.random() * 100 + "vw";
+        confeti.style.background = colores[Math.floor(Math.random() * colores.length)];
+        confeti.style.animationDelay = (Math.random() * 0.8) + "s";
+        confeti.style.width = (8 + Math.random() * 8) + "px";
+        confeti.style.height = (12 + Math.random() * 12) + "px";
+        document.body.appendChild(confeti);
+        setTimeout(() => { confeti.remove(); }, 3500);
       }
     }
 
-    function startSerenade() {
-      showSection('serenata');
-      setTimeout(() => playSong(1, true), 320);
+    function apagarVelas(){
+      if(!cancionTerminada) return;
+
+      document.getElementById("llama1").classList.add("apagada");
+      document.getElementById("llama2").classList.add("apagada");
+      document.getElementById("llama3").classList.add("apagada");
+      document.getElementById("mesaCumple").classList.add("oscura");
+      document.getElementById("textoCumple").innerHTML = "¡Feliz cumpleaños, Diana! 🎉";
+      document.getElementById("btnApagar").style.display = "none";
+
+      crearConfeti();
+      reproducirAplausos();
+
+      setTimeout(() => {
+        document.getElementById("btnSiguienteMensaje").style.display = "inline-block";
+      }, 2500);
     }
 
-    Object.entries(audios).forEach(([num, audio]) => {
-      const n = Number(num);
+    function abrirRegalo(){
+      if(regaloAbierto) return;
+      regaloAbierto = true;
+      reproducirSonidoPuerta();
+      document.getElementById("giftBox").style.display = "none";
+      document.getElementById("telefonoZflip").classList.add("abierto");
+      document.getElementById("textoRegalo").innerHTML = "🎉 Sorpresaaaa!: este es tu regalo, un Samsung Z Flip :D.";
+      document.getElementById("btnAbrirRegalo").textContent = "Regalo abierto";
+      document.getElementById("btnAbrirRegalo").disabled = true;
+    }
 
-      audio.addEventListener('play', () => {
-        activateStage();
-        pauseOthers(n);
-        resetMariachis();
-        mariachis[n].classList.add('show');
-        setActiveButton(n);
-        updateText(n);
-        showMidMessage(n);
-        document.getElementById('stage').classList.add('playing');
-        if (n === 3) createConfetti();
-      });
-
-      audio.addEventListener('ended', () => {
-        if (!autoMode) return;
-        if (n < 3) {
-          playSong(n + 1, true);
+    function reproducirAudio(ruta, nombre){
+      try{
+        if(audioMensajes){
+          audioMensajes.pause();
+          audioMensajes.currentTime = 0;
         }
-      });
 
-      audio.addEventListener('pause', () => {
-        const someonePlaying = Object.values(audios).some(a => !a.paused && !a.ended);
-        if (!someonePlaying) {
-          document.getElementById('stage').classList.remove('playing');
-        }
-      });
-    });
+        audioMensajes = document.createElement("video");
+        audioMensajes.src = ruta;
+        audioMensajes.volume = 1;
+        audioMensajes.play();
+
+        document.getElementById("estadoAudio").innerHTML = "🎧 Reproduciendo mensaje de " + nombre + "...";
+
+        audioMensajes.onended = function(){
+          document.getElementById("estadoAudio").innerHTML = "✅ Terminó el mensaje de " + nombre + ".";
+        };
+
+        audioMensajes.onerror = function(){
+          document.getElementById("estadoAudio").innerHTML = "❌ No se pudo reproducir " + ruta;
+        };
+      }catch(e){
+        document.getElementById("estadoAudio").innerHTML = "❌ Hubo un problema al reproducir el audio.";
+      }
+    }
   </script>
 <a href="serenata.html">
 <button>¿Creíste que era todo? 🎺</button>
